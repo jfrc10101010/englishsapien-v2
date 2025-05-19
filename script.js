@@ -55,11 +55,12 @@ function renderLearningPath() {
     drawPathLines();
 }
 
-// Función para dibujar líneas SVG entre los nodos de tópico
+// Función para dibujar líneas SVG entre los nodos de tópico (¡VERSIÓN MEJORADA!)
 function drawPathLines() {
     const svg = document.getElementById('path-lines');
-    // Verificar si el SVG y el contenedor de la ruta existen antes de intentar dibujar
-    if (!svg || !document.getElementById('learning-path-container')) {
+    const learningPathContainer = document.getElementById('learning-path-container');
+
+    if (!svg || !learningPathContainer) {
         console.warn("SVG o contenedor de la ruta no encontrados. No se pueden dibujar las líneas.");
         return;
     }
@@ -72,32 +73,43 @@ function drawPathLines() {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     let d = "";
 
-    // Calcular la posición central de cada tópico
-    const topicPositions = Array.from(topics).map(topic => {
-        const rect = topic.getBoundingClientRect();
-        // Obtener la posición relativa al contenedor SVG, que es el learning-path-container
-        const containerRect = svg.parentElement.getBoundingClientRect();
+    // Obtener el offset del contenedor principal para calcular posiciones relativas
+    const containerRect = learningPathContainer.getBoundingClientRect();
 
-        return {
+    const topicPositions = [];
+    topics.forEach(topic => {
+        const rect = topic.getBoundingClientRect();
+        topicPositions.push({
             x: (rect.left + rect.right) / 2 - containerRect.left,
             y: (rect.top + rect.bottom) / 2 - containerRect.top
-        };
+        });
     });
 
-    // Construir la ruta SVG
-    topicPositions.forEach((pos, index) => {
-        if (index === 0) {
-            d += `M ${pos.x} ${pos.y}`; // Mover a la primera posición
-        } else {
-            // Usar curvas cúbicas para un camino más suave y orgánico
-            const prevPos = topicPositions[index - 1];
-            const controlPointX1 = prevPos.x + (pos.x - prevPos.x) / 3;
-            const controlPointY1 = prevPos.y; // Control point 1 en la misma altura que el anterior
-            const controlPointX2 = prevPos.x + (pos.x - prevPos.x) * 2 / 3;
-            const controlPointY2 = pos.y; // Control point 2 en la misma altura que el actual
-            d += ` C ${controlPointX1} ${controlPointY1}, ${controlPointX2} ${controlPointY2}, ${pos.x} ${pos.y}`;
+    // Construir la ruta SVG para un camino con zig-zag más preciso
+    if (topicPositions.length > 0) {
+        d += `M ${topicPositions[0].x} ${topicPositions[0].y}`; // Mover al primer tópico
+
+        for (let i = 1; i < topicPositions.length; i++) {
+            const prevPos = topicPositions[i - 1];
+            const currentPos = topicPositions[i];
+
+            // Calcular puntos de control para una curva más suave y siguiendo el "flujo" vertical
+            // Esto intenta hacer una curva más natural que vaya primero verticalmente y luego horizontalmente
+            const controlPointX1 = prevPos.x;
+            const controlPointY1 = prevPos.y + (currentPos.y - prevPos.y) / 2; // Control point 1 a mitad de camino vertical
+
+            const controlPointX2 = currentPos.x;
+            const controlPointY2 = prevPos.y + (currentPos.y - prevPos.y) / 2; // Control point 2 a mitad de camino vertical
+
+            // Si los tópicos están en la misma fila (poca diferencia en Y), usamos una línea recta o una curva muy suave
+            if (Math.abs(currentPos.y - prevPos.y) < 20) { // Umbral pequeño para considerar "misma fila"
+                d += ` L ${currentPos.x} ${currentPos.y}`; // Linea recta
+            } else {
+                // Curva más pronunciada para zig-zag vertical
+                d += ` C ${controlPointX1} ${controlPointY1}, ${controlPointX2} ${controlPointY2}, ${currentPos.x} ${currentPos.y}`;
+            }
         }
-    });
+    }
 
     path.setAttribute("d", d);
     path.setAttribute("stroke", "#D1D5DB"); // Color de la línea (gris)
