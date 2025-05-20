@@ -1,188 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EnglishSapien</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-
-    <style>
-        /* Apply Roboto as the default font for the entire body */
-        body {
-            font-family: 'Roboto', sans-serif;
-            /* Set the base background color for the entire body */
-            background-color: #223d65; /* Primary Color 1 (Base) - Dark Blue */
-            color: #FFFFFF; /* Default text color for the body on dark background */
-        }
-
-        /* Apply Caveat font to elements with the .font-caveat class */
-        .font-caveat {
-            font-family: 'Caveat', cursive;
-        }
-
-        /* Style for the learning path container to have a pure white background */
-        /* This makes the path area visually distinct */
-        #learning-path-container {
-             background-color: #FFFFFF; /* Pure White background for the path area */
-             color: #223d65; /* Primary Color 1 (Base) for text content on white background */
-             /* Add border-radius to the container for a softer look */
-             border-radius: 1rem; /* Example rounded corners */
-             /* Add some padding around the content inside the white container */
-             padding: 1rem; /* Example padding inside the white container */
-             /* Ensure the container takes full width minus parent padding */
-             /* calc(100% - (padding-left + padding-right of parent)) */
-             width: calc(100% - 2rem); /* Full width minus 1rem padding on each side from parent */
-             /* Center the container horizontally if it doesn't take full width */
-             margin: 0 auto;
-        }
-
-         /* Adjust the padding on the parent flex-grow div that wraps the path container */
-         /* This padding is outside the white background area */
-        .flex-grow.overflow-y-auto {
-            padding: 1rem; /* Padding around the white learning path container */
-        }
-
-         /* Style for the topic name text within a topic element */
-         /* Handles text overflow by adding ellipsis */
-        .topic .topic-name {
-            overflow: hidden; /* Hide text that exceeds the element's width */
-            text-overflow: ellipsis; /* Display "..." for clipped text */
-            white-space: nowrap; /* Prevent the text from wrapping to the next line */
-            width: 100%; /* Ensure the text container takes the full width of its parent topic element */
-            padding: 0 0.25rem; /* Small horizontal padding inside the topic name div */
-        }
-
-        /* Estilo para los nodos de tópico - CUADRADOS REDONDEADOS */
-        .topic-node {
-            background-color: #D1D5DB; /* Un gris claro de Tailwind */
-            border-radius: 0.75rem; /* Ajustado para ser más cuadrado redondeado */
-            width: 80px; /* Tamaño del cuadrado */
-            height: 80px; /* Tamaño del cuadrado */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
-            color: #1F2937; /* Texto oscuro */
-            font-size: 0.75rem; /* Tamaño de fuente pequeño para el nombre */
-        }
-
-        .topic-node span:first-child {
-             font-size: 2rem; /* Tamaño más grande para el emoji/ícono */
-             margin-bottom: 0.25rem; /* Pequeño espacio entre emoji y texto */
-        }
-
-         /* Estados de los tópicos (ejemplo de clases que usaremos) */
-        .topic-node.locked {
-            background-color: #E5E7EB; /* Gris más claro para bloqueado */
-            color: #9CA3AF; /* Texto gris */
-        }
-
-         .topic-node.active {
-            background-color: #A7F3D0; /* Un verde claro de Tailwind */
-            color: #065F46; /* Texto verde oscuro */
-        }
-
-         .topic-node.completed {
-            background-color: #34D399; /* Un verde más fuerte */
-            color: #065F46; /* Texto verde oscuro */
-            position: relative; /* Para posicionar el checkmark */
-        }
-
-         .topic-node.completed::after {
-             content: '✅'; /* Checkmark */
-             position: absolute;
-             top: -10px; /* Ajustar posición */
-             right: -10px; /* Ajustar posición */
-             font-size: 1.5rem;
-         }
-
-
-    </style>
-
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#223d65">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
-<body>
-
-    <div class="flex flex-col h-screen text-[#FFFFFF]">
-
-        <div class="flex-grow overflow-y-auto p-4">
-
-            <div id="learning-path-container" class="relative flex flex-col items-center w-full pb-20">
-
-                <h1 class="font-caveat text-3xl text-center mb-8 text-[#223d65]">Basic Survival</h1> <svg id="path-lines" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
-
+<body class="bg-[#223d65] text-[#FFFFFF] font-roboto">
+    <div class="flex flex-col h-screen">
+        <main class="flex-grow overflow-y-auto p-4 relative">
+            <div id="learning-path-container" class="relative flex flex-col items-center w-full pb-20 bg-white text-[#223d65] rounded-2xl p-4 mx-auto">
+                <h1 class="font-caveat text-3xl text-center mb-8 text-[#DFBF92]">Basic Survival</h1>
+                <svg id="path-lines" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
                 <div class="topics-container flex flex-col items-center relative z-10 w-full">
-
-                    <div class="topic-row flex justify-center w-full mb-6">
-                        <div class="topic-node">
-                            <span class="text-3xl mb-1">💥</span>
-                            <span class="text-xs text-gray-700">Accidents</span>
-                        </div>
                     </div>
-
-                    <div class="topic-row flex justify-around w-full mb-6">
-                        <div class="topic-node locked">
-                             <span class="text-3xl mb-1">⏳</span>
-                            <span class="text-xs text-gray-700">Age</span>
-                        </div>
-                        <div class="topic-node locked">
-                             <span class="text-3xl mb-1">😡</span>
-                            <span class="text-xs text-gray-700">Anger</span>
-                        </div>
-                    </div>
-
-                     <div class="topic-row flex justify-center w-full mb-6">
-                        <div class="topic-node locked">
-                            <span class="text-3xl mb-1">🐾</span>
-                            <span class="text-xs text-gray-700">Animals</span>
-                        </div>
-                    </div>
-
-                    </div>
-
             </div>
 
-        </div>
-
-        <nav class="fixed bottom-0 left-0 right-0 bg-[#7abcc7] text-[#FFFFFF] p-4 flex justify-around items-center z-50">
-            <button class="flex flex-col items-center text-[#FFFFFF] p-0 m-0">
-                <div class="flex justify-center items-center w-6 h-6 p-0 m-0">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 20l-5 5V4a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H9z"></path>
-                    </svg>
+            <div id="class-screen" class="absolute inset-0 bg-white z-40 p-4 hidden flex-col">
+                <button id="back-button" class="absolute top-4 left-4 text-gray-700 text-2xl font-bold">←</button>
+                <h2 class="text-2xl text-gray-800 text-center mt-10">Contenido de la Clase</h2>
+                <div id="class-content" class="flex-grow overflow-y-auto p-4 text-gray-700">
+                    <p>Este es un placeholder. El contenido real de la clase aparecerá aquí.</p>
                 </div>
-                <span>Chat</span>
+            </div>
+        </main>
+
+        <nav class="bg-[#22130D] p-4 flex justify-around items-center fixed bottom-0 left-0 w-full z-50 shadow-lg">
+            <button class="flex flex-col items-center text-[#9C6B36] text-center">
+                <span class="text-3xl">💬</span>
+                <span class="text-xs">Chat</span>
             </button>
-
-            <button class="flex flex-col items-center text-[#FFFFFF] p-0 m-0">
-                <div class="flex justify-center items-center w-6 h-6 p-0 m-0">
-                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m0 0l7 7m-7-7v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                </div>
-                <span>Home</span>
+            <button class="flex flex-col items-center text-[#DFBF92] text-center">
+                <span class="text-3xl">🏠</span>
+                <span class="text-xs">Home</span>
             </button>
-
-            <button class="flex flex-col items-center text-[#FFFFFF] p-0 m-0">
-                <div class="flex justify-center items-center w-6 h-6 p-0 m-0">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                </div>
-                <span>Profile</span>
+            <button class="flex flex-col items-center text-[#9C6B36] text-center">
+                <span class="text-3xl">👤</span>
+                <span class="text-xs">Profile</span>
             </button>
         </nav>
-
     </div>
 
-    <script src="script.js" type="module" defer></script>
-
+    <script type="module" src="script.js" defer></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado con éxito:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Fallo el registro del Service Worker:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
