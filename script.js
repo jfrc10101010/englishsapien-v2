@@ -1,4 +1,4 @@
-// script.js (Versión MEJORADA para EnglishSapien v2 con estilo y líneas correctas)
+// script.js (Versión MEJORADA FINAL para EnglishSapien v2 con estilo y líneas correctas)
 
 // IMPORTANTE: Importa los datos del learning path desde el archivo learningPathData.js
 import { learningPathData } from './learningPathData.js';
@@ -12,15 +12,16 @@ function renderLearningPath() {
     const structuredTopics = [];
     let tempRow = [];
     // Lógica para alternar 1 tópico por fila y luego 2 tópicos por fila
+    // Esta lógica de distribución es crucial para que las líneas se vean bien con el zig-zag.
     learningPathData.forEach((topic, index) => {
-        if (index % 3 === 0) { // Un solo tópico en esta "fila" lógica
+        if (index % 3 === 0) { // Un solo tópico en esta "fila" lógica (ej: tópico 1, 4, 7...)
             if (tempRow.length > 0) { // Si hay tópicos pendientes de la fila anterior (de 2)
                 structuredTopics.push(tempRow);
             }
             tempRow = [topic]; // Crea una nueva fila con este tópico
             structuredTopics.push(tempRow); // Agrega la fila de 1 tópico
             tempRow = []; // Reinicia para la siguiente fila de 2
-        } else { // Dos tópicos en esta "fila" lógica
+        } else { // Dos tópicos en esta "fila" lógica (ej: tópico 2, 3, 5, 6...)
             tempRow.push(topic);
             if (tempRow.length === 2) {
                 structuredTopics.push(tempRow);
@@ -28,11 +29,10 @@ function renderLearningPath() {
             }
         }
     });
-    // Añadir la última fila si quedó incompleta
+    // Añadir la última fila si quedó incompleta (ej. si el total de tópicos no es múltiplo de 3)
     if (tempRow.length > 0) {
         structuredTopics.push(tempRow);
     }
-
 
     structuredTopics.forEach((rowTopics, rowIndex) => {
         const rowDiv = document.createElement('div');
@@ -42,7 +42,7 @@ function renderLearningPath() {
         rowTopics.forEach(topic => {
             const topicElement = document.createElement('div');
             const statusClass = topic.status;
-
+            
             // Aplicar clases de Tailwind para el diseño del nodo (círculo, sombra, bordes, colores)
             topicElement.className = `
                 topic-node 
@@ -59,7 +59,7 @@ function renderLearningPath() {
 
             // Contenido del tópico: ícono y nombre
             topicElement.innerHTML = `
-                <span class="text-6xl mb-1 text-white"><span class="math-inline">\{topic\.icon\}</span\> <span class\="text\-xs font\-semibold text\-gray\-800 topic\-name mt\-1"\></span>{topic.name}</span>
+                <span class="text-6xl mb-1 text-white">${topic.icon}</span> <span class="text-xs font-semibold text-gray-800 topic-name mt-1">${topic.name}</span>
             `;
             topicElement.dataset.topicId = topic.id; // Para identificar el tópico al hacer clic
 
